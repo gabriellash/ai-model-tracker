@@ -73,9 +73,8 @@ export function validateDataset({ models, changelog = [], status = null }, { tod
           prev = t.above_input_tokens;
         }
       }
-    } else if (p === null && Array.isArray(m.availability) && m.availability.includes('first-party')) {
-      errors.push(`${at}: pricing is null but availability lists first-party; record the first-party price (or pricing.free)`);
     }
+    // pricing: null means "no official per-token price published"; the page says so instead of showing a number.
 
     // Context and output sizes.
     if (m.context_window !== undefined && (!Number.isInteger(m.context_window) || m.context_window < 1000 || m.context_window > 100_000_000)) {

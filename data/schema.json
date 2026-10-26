@@ -38,7 +38,24 @@
         "above_input_tokens": { "type": "integer", "minimum": 1 },
         "input": { "$ref": "#/$defs/price" },
         "output": { "$ref": "#/$defs/price" },
-        "cached_input": { "$ref": "#/$defs/nullablePrice" }
+        "cached_input": { "$ref": "#/$defs/nullablePrice" },
+        "cache_write": { "$ref": "#/$defs/nullablePrice" },
+        "batch_input": { "$ref": "#/$defs/nullablePrice" },
+        "batch_output": { "$ref": "#/$defs/nullablePrice" }
+      }
+    },
+    "scheduledPrice": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "A price change the provider has announced for a future date. The current price stays in the main fields until the date passes.",
+      "required": ["effective_date", "input", "output"],
+      "properties": {
+        "effective_date": { "$ref": "#/$defs/date" },
+        "input": { "$ref": "#/$defs/price" },
+        "output": { "$ref": "#/$defs/price" },
+        "cached_input": { "$ref": "#/$defs/nullablePrice" },
+        "batch_input": { "$ref": "#/$defs/nullablePrice" },
+        "batch_output": { "$ref": "#/$defs/nullablePrice" }
       }
     },
     "pricing": {
@@ -53,7 +70,8 @@
         "batch_input": { "$ref": "#/$defs/nullablePrice" },
         "batch_output": { "$ref": "#/$defs/nullablePrice" },
         "free": { "type": "boolean", "description": "True only when the provider explicitly lists the model as free of charge." },
-        "tiers": { "type": "array", "items": { "$ref": "#/$defs/tier" } }
+        "tiers": { "type": "array", "items": { "$ref": "#/$defs/tier" } },
+        "scheduled": { "type": "array", "items": { "$ref": "#/$defs/scheduledPrice" } }
       }
     },
     "source": {
@@ -101,7 +119,7 @@
           "additionalProperties": false,
           "required": ["available", "license"],
           "properties": {
-            "available": { "type": "boolean" },
+            "available": { "type": ["boolean", "null"], "description": "null when the provider does not say." },
             "license": { "type": ["string", "null"] }
           }
         },
@@ -109,7 +127,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "enum": ["first-party", "aws-bedrock", "google-vertex", "azure", "oci", "ibm-watsonx", "snowflake", "databricks", "nvidia-nim"] }
+          "items": { "enum": ["first-party", "self-hosted", "aws-bedrock", "google-vertex", "azure", "oci", "ibm-watsonx", "snowflake", "databricks", "nvidia-nim"] }
         },
         "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
         "last_verified": { "$ref": "#/$defs/date" }
