@@ -74,9 +74,11 @@ function changelogCovers(entries, change) {
   });
 }
 
-export function guard({ oldModels, newModels, oldChangelog, newChangelog, changedFiles = [] }) {
+export function guard({ oldModels, newModels, oldChangelog, newChangelog, changedFiles = [], today = new Date().toISOString().slice(0, 10) }) {
   const failures = [];
   const flags = [];
+  const notes = [];
+  const oldById = new Map(oldModels.map((m) => [m.id, m]));
 
   const strayFiles = changedFiles.filter((f) => !ALLOWED_FILES.includes(f));
   if (strayFiles.length) failures.push(`Files changed outside the data files: ${strayFiles.join(', ')}`);
@@ -97,7 +99,11 @@ export function guard({ oldModels, newModels, oldChangelog, newChangelog, change
   for (const c of changes) {
     if (c.field.startsWith('pricing.') && typeof c.old === 'number' && typeof c.new === 'number') {
       const move = c.old === 0 ? (c.new === 0 ? 0 : Infinity) : Math.abs(c.new - c.old) / c.old;
-      if (move > LIMITS.priceMove) flags.push(`Price moved ${move === Infinity ? 'from 0' : `${Math.round(move * 100)}%`}: ${c.model_id} ${c.field} ${fmt(c.old)} → ${fmt(c.new)}`);
+      // A price that matches an already-announced change whose date has arrived is expected, not suspicious.
+      const key = c.field.slice('pricing.'.length);
+      const announced = (oldById.get(c.model_id)?.pricing?.scheduled ?? []).find((s) => s.effective_date <= today && s[key] === c.new);
+      if (move > LIMITS.priceMove && announced) notes.push(`Price moved ${Math.round(move * 100)}% as announced for ${announced.effective_date}: ${c.model_id} ${c.field} ${fmt(c.old)} → ${fmt(c.new)}`);
+      else if (move > LIMITS.priceMove) flags.push(`Price moved ${move === Infinity ? 'from 0' : `${Math.round(move * 100)}%`}: ${c.model_id} ${c.field} ${fmt(c.old)} → ${fmt(c.new)}`);
     }
     if (c.field === 'context_window' && typeof c.old === 'number' && typeof c.new === 'number') {
       const factor = Math.max(c.new / c.old, c.old / c.new);
@@ -113,7 +119,7 @@ export function guard({ oldModels, newModels, oldChangelog, newChangelog, change
   }
 
   const status = failures.length ? 'fail' : flags.length ? 'flagged' : 'clean';
-  return { status, failures, flags, changes, appended, changedModels: changedModels.size };
+  return { status, failures, flags, notes, changes, appended, changedModels: changedModels.size };
 }
 
 function fmt(v) {
@@ -126,6 +132,7 @@ export function renderReport(result) {
   const lines = [`## Guard result: **${result.status}**`, ''];
   if (result.failures.length) lines.push('### Blocking problems', ...result.failures.map((f) => `- ${f}`), '');
   if (result.flags.length) lines.push('### Needs human review', ...result.flags.map((f) => `- ${f}`), '');
+  if (result.notes?.length) lines.push('### Large but announced (not flagged)', ...result.notes.map((f) => `- ${f}`), '');
   if (!result.appended.length) {
     lines.push('No data changes.');
   } else {

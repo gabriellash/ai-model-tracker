@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Model Tracker: prices, context windows and releases</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<link rel="canonical" href="{{SITE_URL}}">
+<meta name="theme-color" content="#f7f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Model Tracker">
+<meta property="og:description" content="{{DESCRIPTION}}">
+<meta property="og:url" content="{{SITE_URL}}">
+<meta property="og:image" content="{{SITE_URL}}og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI Model Tracker: {{COUNT}} models, last checked {{CHECKED_DATE}}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="alternate" type="application/atom+xml" title="AI Model Tracker changelog" href="feed.xml">
+<style>{{CSS}}</style>
+<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script type="application/ld+json">{{JSONLD}}</script>
+</head>
+<body>
+<a class="skip" href="#models">Skip to the model table</a>
+<header class="top">
+  <div class="wrap top-row">
+    <div>
+      <h1>AI Model Tracker</h1>
+      <p class="tagline">Prices per 1M tokens, context windows and releases from official provider pages, checked daily.</p>
+    </div>
+    <div class="top-meta">
+      <p id="freshness" class="fresh" data-checked="{{CHECKED_ISO}}"><span class="dot" aria-hidden="true"></span> <span id="fresh-text">Last checked <time datetime="{{CHECKED_ISO}}">{{CHECKED_HUMAN}}</time></span></p>
+      <p class="muted small">Data last changed <time id="changed" datetime="{{CHANGED_ISO}}">{{CHANGED_HUMAN}}</time></p>
+      <button type="button" id="theme" class="btn ghost" aria-label="Colour theme: system">Theme: system</button>
+    </div>
+  </div>
+  <p id="offline" class="wrap banner" hidden></p>
+</header>
+
+<main>
+  <section class="wrap" aria-labelledby="week-h">
+    <h2 id="week-h">This week</h2>
+    <div id="week" class="week">{{WEEK}}</div>
+  </section>
+
+  <section class="wrap" aria-labelledby="models-h" id="models">
+    <h2 id="models-h">Models <span class="count muted" id="count">{{COUNT}} of {{COUNT}}</span></h2>
+    <form id="filters" class="filters" role="search" onsubmit="return false">
+      <label class="f-q">Search <input type="search" name="q" placeholder="Name, provider or API id" autocomplete="off"></label>
+      <label>Provider <select name="provider"><option value="">All</option>{{PROVIDER_OPTIONS}}</select></label>
+      <label>Input type <select name="mod"><option value="">Any</option><option value="image">Image</option><option value="audio">Audio</option><option value="video">Video</option><option value="pdf">PDF</option></select></label>
+      <label>Open weights <select name="ow"><option value="">Any</option><option value="yes">Yes</option><option value="no">No</option><option value="na">Not stated</option></select></label>
+      <label>Status <select name="status"><option value="">Any</option><option value="preview">Preview</option><option value="available">Available</option><option value="deprecated">Deprecated</option><option value="retired">Retired</option></select></label>
+      <label>Input $/1M min <input type="number" name="pmin" min="0" step="any" inputmode="decimal"></label>
+      <label>Input $/1M max <input type="number" name="pmax" min="0" step="any" inputmode="decimal"></label>
+      <label>Min context <select name="cmin"><option value="">Any</option><option value="128000">128,000</option><option value="200000">200,000</option><option value="256000">256,000</option><option value="400000">400,000</option><option value="1000000">1,000,000</option></select></label>
+      <label class="f-sort">Sort <select name="sort">{{SORT_OPTIONS}}</select></label>
+      <button type="button" id="clear-filters" class="btn ghost">Reset</button>
+    </form>
+
+    <details id="calc" class="calc">
+      <summary>Cost calculator</summary>
+      <div class="calc-body">
+        <label>Requests per month <input name="req" inputmode="numeric" placeholder="e.g. 100k" autocomplete="off"></label>
+        <label>Input tokens per request <input name="in" inputmode="numeric" placeholder="e.g. 2,000" autocomplete="off"></label>
+        <label>Output tokens per request <input name="out" inputmode="numeric" placeholder="e.g. 500" autocomplete="off"></label>
+        <p class="muted small" id="calc-note">Uses the listed standard input and output prices (no caching or batch discounts). For models with a long-context tier, the tier price is applied to the whole request when its input exceeds the threshold. Accepts 500k, 10M. Results sort cheapest first.</p>
+      </div>
+    </details>
+
+    <p class="legend muted small">Prices in USD per 1M text tokens on the provider's own API. <span class="na">n/a</span> = not published by the provider. "Available (status not stated)" = listed and callable, but the provider does not say "generally available".</p>
+    <div class="table-wrap">
+      <table id="table">
+        <caption class="vh">AI models with price, context window and source</caption>
+        <thead><tr>{{TABLE_HEAD}}</tr></thead>
+        <tbody id="rows">{{TABLE_ROWS}}</tbody>
+      </table>
+      <p id="empty" class="empty" hidden>No models match these filters.</p>
+    </div>
+    <p class="downloads small">Download: <a href="models.json" download>models.json</a> · <a href="models.csv" download>models.csv</a> · <a href="changelog.json" download>changelog.json</a> · <a href="feed.xml">Atom feed</a> · <a href="schema.json">schema</a></p>
+  </section>
+
+  <section class="wrap" aria-labelledby="log-h" id="changelog">
+    <h2 id="log-h">Changelog</h2>
+    <label class="small">Provider <select id="log-provider"><option value="">All</option>{{PROVIDER_OPTIONS}}</select></label>
+    <ul id="log" class="events log">{{CHANGELOG}}</ul>
+    <nav class="pager" aria-label="Changelog pages"><button type="button" class="btn ghost" id="log-prev">Newer</button> <span id="log-page" class="muted small"></span> <button type="button" class="btn ghost" id="log-next">Older</button></nav>
+  </section>
+</main>
+
+<div id="tray" class="tray" hidden>
+  <div class="wrap tray-row"><span id="tray-text"></span> <button type="button" class="btn" id="cmp-open">Compare</button> <button type="button" class="btn ghost" id="cmp-clear">Clear</button></div>
+</div>
+<dialog id="cmp" aria-labelledby="cmp-h">
+  <div class="cmp-head"><h2 id="cmp-h">Compare models</h2><button type="button" class="btn ghost" id="cmp-close">Close</button></div>
+  <p class="muted small">Rows where the models differ are highlighted.</p>
+  <div class="cmp-wrap"><table id="cmp-table"></table></div>
+</dialog>
+
+<footer class="wrap foot small muted">
+  <p>Prices and specs are collected from providers' official pages by an automated daily job. They can be out of date or wrong: confirm with the provider before you rely on them. This site is not affiliated with any provider listed; names are trademarks of their owners.</p>
+  <p><a href="{{REPO_URL}}">Source code and data on GitHub</a> · Built {{BUILT_ISO}}</p>
+</footer>
+
+<script type="application/json" id="data">{{DATA_JSON}}</script>
+<script type="module" src="app.js?v={{VERSION}}"></script>
+</body>
+</html>

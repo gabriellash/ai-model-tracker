@@ -95,3 +95,25 @@ test('files outside the data files fail', () => {
   assert.equal(r.status, 'fail');
   assert.match(r.failures[0], /deploy\.yml/);
 });
+
+test('price move matching an announced change on or after its date is not flagged', () => {
+  const old = base();
+  old[0].pricing.scheduled = [{ effective_date: '2026-10-01', output: 16 }];
+  const m = structuredClone(old);
+  m[0].pricing.output = 16;
+  const r = guard({ oldModels: old, newModels: m, oldChangelog: [], newChangelog: [entry('example/alpha-1', 'pricing.output', 8, 16)], changedFiles: ['data/models.json', 'data/changelog.json'], today: '2026-10-26' });
+  assert.equal(r.status, 'clean');
+  assert.match(r.notes[0], /as announced for 2026-10-01/);
+});
+
+test('announced change before its date, or a different value, is still flagged', () => {
+  const old = base();
+  old[0].pricing.scheduled = [{ effective_date: '2026-12-01', output: 16 }];
+  const early = structuredClone(old);
+  early[0].pricing.output = 16;
+  const args = (m, nv) => ({ oldModels: old, newModels: m, oldChangelog: [], newChangelog: [entry('example/alpha-1', 'pricing.output', 8, nv)], changedFiles: ['data/models.json'], today: '2026-10-26' });
+  assert.equal(guard(args(early, 16)).status, 'flagged');
+  const other = structuredClone(old);
+  other[0].pricing.output = 20;
+  assert.equal(guard({ ...args(other, 20), today: '2026-12-02' }).status, 'flagged');
+});
