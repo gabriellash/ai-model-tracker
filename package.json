@@ -1,0 +1,22 @@
+{
+  "name": "ai-model-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-updating reference of AI model prices, context windows and releases.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "guard": "node scripts/guard.mjs",
+    "build": "node scripts/build.mjs",
+    "table": "node scripts/print-table.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

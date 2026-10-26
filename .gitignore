@@ -1,0 +1,7 @@
+node_modules/
+dist/
+run-summary.md
+guard-report.md
+guard-result.json
+.DS_Store
+Thumbs.db

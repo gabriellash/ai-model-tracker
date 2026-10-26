@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "models": [
+    {
+      "id": "example/alpha-1",
+      "provider": "Example",
+      "name": "Alpha 1",
+      "api_id": "alpha-1",
+      "release_date": "2026-01-15",
+      "status": "ga",
+      "deprecation_date": null,
+      "retirement_date": null,
+      "announcement_url": "https://example.com/blog/alpha-1",
+      "pricing": {
+        "input": 2,
+        "output": 8,
+        "cached_input": 0.5,
+        "cache_write": null,
+        "batch_input": 1,
+        "batch_output": 4,
+        "tiers": [{ "above_input_tokens": 200000, "input": 4, "output": 12, "cached_input": 1 }]
+      },
+      "context_window": 1000000,
+      "max_output_tokens": 64000,
+      "modalities": { "input": ["text", "image"], "output": ["text"] },
+      "open_weights": { "available": false, "license": null },
+      "availability": ["first-party", "aws-bedrock"],
+      "sources": [
+        { "url": "https://example.com/pricing", "fields": ["pricing"] },
+        { "url": "https://example.com/docs/models", "fields": ["context_window", "max_output_tokens", "modalities", "release_date"] }
+      ],
+      "last_verified": "2026-10-26"
+    },
+    {
+      "id": "example/beta-open",
+      "provider": "Example",
+      "name": "Beta Open",
+      "api_id": null,
+      "release_date": "2026-03-01",
+      "status": "ga",
+      "deprecation_date": null,
+      "retirement_date": null,
+      "announcement_url": null,
+      "pricing": null,
+      "context_window": 128000,
+      "max_output_tokens": null,
+      "modalities": { "input": ["text"], "output": ["text"] },
+      "open_weights": { "available": true, "license": "Apache-2.0" },
+      "availability": ["aws-bedrock"],
+      "sources": [{ "url": "https://example.com/beta-open", "fields": ["context_window", "modalities", "open_weights"] }],
+      "last_verified": "2026-10-26"
+    }
+  ]
+}
