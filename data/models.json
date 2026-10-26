@@ -887,8 +887,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -956,8 +955,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -1025,8 +1023,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -1094,8 +1091,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -1163,8 +1159,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -1232,8 +1227,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -1301,8 +1295,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -1319,7 +1312,7 @@
       "provider": "OpenAI",
       "name": "GPT-5.5",
       "api_id": "gpt-5.5",
-      "release_date": "2026-04-23",
+      "release_date": "2026-04-24",
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -1370,7 +1363,12 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
+            "max_output_tokens"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
             "release_date"
           ]
         }
@@ -1382,7 +1380,7 @@
       "provider": "OpenAI",
       "name": "GPT-5.5 Pro",
       "api_id": "gpt-5.5-pro",
-      "release_date": "2026-04-23",
+      "release_date": "2026-04-24",
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -1433,7 +1431,12 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
+            "max_output_tokens"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
             "release_date"
           ]
         }
@@ -1496,7 +1499,12 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
+            "max_output_tokens"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
             "release_date"
           ]
         }
@@ -1559,7 +1567,12 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
+            "max_output_tokens"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
             "release_date"
           ]
         }
@@ -1614,7 +1627,12 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
+            "max_output_tokens"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
             "release_date"
           ]
         }
@@ -1669,14 +1687,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -1730,7 +1753,12 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
+            "max_output_tokens"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
             "release_date"
           ]
         }
@@ -1742,7 +1770,7 @@
       "provider": "OpenAI",
       "name": "GPT-5.2 Pro",
       "api_id": "gpt-5.2-pro",
-      "release_date": "2025-12-11",
+      "release_date": null,
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -1785,8 +1813,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         }
       ],
@@ -1840,14 +1867,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -1901,14 +1933,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -1962,14 +1999,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2023,14 +2065,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2084,14 +2131,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2145,14 +2197,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2206,14 +2263,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2224,7 +2286,7 @@
       "provider": "OpenAI",
       "name": "GPT-4o",
       "api_id": "gpt-4o",
-      "release_date": "2024-08-06",
+      "release_date": "2024-05-13",
       "status": "deprecated",
       "deprecation_date": "2026-10-14",
       "retirement_date": "2027-01-14",
@@ -2267,14 +2329,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2328,14 +2395,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2389,14 +2461,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2450,14 +2527,19 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
           "url": "https://developers.openai.com/api/docs/deprecations",
           "fields": [
             "status"
+          ]
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/changelog",
+          "fields": [
+            "release_date"
           ]
         }
       ],
@@ -2524,8 +2606,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -2598,8 +2679,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -2672,8 +2752,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -2736,8 +2815,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -2800,8 +2878,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -2874,8 +2951,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -2938,8 +3014,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -3012,8 +3087,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -3075,8 +3149,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -3139,8 +3212,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -3174,15 +3246,12 @@
       "max_output_tokens": null,
       "modalities": {
         "input": [
-          "text",
           "image",
           "audio",
           "video",
           "pdf"
         ],
-        "output": [
-          "text"
-        ]
+        "output": null
       },
       "open_weights": {
         "available": false,
@@ -3379,13 +3448,8 @@
       "context_window": 256000,
       "max_output_tokens": null,
       "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
+        "input": null,
+        "output": null
       },
       "open_weights": {
         "available": true,
@@ -3405,7 +3469,6 @@
           "url": "https://docs.mistral.ai/models/mistral-medium-3-5-26-04",
           "fields": [
             "context_window",
-            "modalities",
             "release_date",
             "open_weights"
           ]
@@ -3434,12 +3497,8 @@
       "context_window": 256000,
       "max_output_tokens": null,
       "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
+        "input": null,
+        "output": null
       },
       "open_weights": {
         "available": true,
@@ -3459,7 +3518,6 @@
           "url": "https://docs.mistral.ai/models/mistral-small-4-0-26-03",
           "fields": [
             "context_window",
-            "modalities",
             "release_date",
             "open_weights"
           ]
@@ -3488,13 +3546,8 @@
       "context_window": 256000,
       "max_output_tokens": null,
       "modalities": {
-        "input": [
-          "text",
-          "image"
-        ],
-        "output": [
-          "text"
-        ]
+        "input": null,
+        "output": null
       },
       "open_weights": {
         "available": true,
@@ -3514,7 +3567,6 @@
           "url": "https://docs.mistral.ai/models/mistral-large-3-25-12",
           "fields": [
             "context_window",
-            "modalities",
             "release_date",
             "open_weights"
           ]
@@ -3543,12 +3595,8 @@
       "context_window": 256000,
       "max_output_tokens": null,
       "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
+        "input": null,
+        "output": null
       },
       "open_weights": {
         "available": true,
@@ -3568,7 +3616,6 @@
           "url": "https://docs.mistral.ai/models/ministral-3-14b-25-12",
           "fields": [
             "context_window",
-            "modalities",
             "release_date",
             "open_weights"
           ]
@@ -3707,12 +3754,8 @@
       "context_window": 128000,
       "max_output_tokens": null,
       "modalities": {
-        "input": [
-          "text"
-        ],
-        "output": [
-          "text"
-        ]
+        "input": null,
+        "output": null
       },
       "open_weights": {
         "available": false,
@@ -3732,7 +3775,6 @@
           "url": "https://docs.mistral.ai/models/codestral-25-08",
           "fields": [
             "context_window",
-            "modalities",
             "release_date"
           ]
         }
@@ -4271,7 +4313,6 @@
             "context_window",
             "modalities",
             "max_output_tokens",
-            "release_date",
             "open_weights"
           ]
         },
@@ -4327,8 +4368,7 @@
             "pricing",
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         },
         {
@@ -4374,9 +4414,7 @@
           "url": "https://docs.cohere.com/docs/models",
           "fields": [
             "context_window",
-            "modalities",
             "max_output_tokens",
-            "release_date",
             "open_weights"
           ]
         },
@@ -4734,8 +4772,6 @@
           "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-2-lite.html",
           "fields": [
             "context_window",
-            "modalities",
-            "max_output_tokens",
             "release_date"
           ]
         },
@@ -4754,7 +4790,7 @@
       "provider": "Alibaba",
       "name": "Qwen3.8-Max",
       "api_id": "qwen3.8-max",
-      "release_date": "2026-09-02",
+      "release_date": null,
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -4798,8 +4834,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         }
       ],
@@ -4810,7 +4845,7 @@
       "provider": "Alibaba",
       "name": "Qwen3.7-Max",
       "api_id": "qwen3.7-max",
-      "release_date": "2026-05-20",
+      "release_date": null,
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -4852,8 +4887,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         }
       ],
@@ -4864,7 +4898,7 @@
       "provider": "Alibaba",
       "name": "Qwen3.7-Plus",
       "api_id": "qwen3.7-plus",
-      "release_date": "2026-05-26",
+      "release_date": null,
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -4915,8 +4949,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         }
       ],
@@ -4982,7 +5015,7 @@
       "provider": "Alibaba",
       "name": "Qwen3.7-Flash",
       "api_id": "qwen3.7-flash",
-      "release_date": "2026-07-15",
+      "release_date": null,
       "status": "ga",
       "deprecation_date": null,
       "retirement_date": null,
@@ -4992,22 +5025,18 @@
         "output": 0.13,
         "cached_input": null,
         "cache_write": null,
-        "batch_input": 0.015,
-        "batch_output": 0.065,
+        "batch_input": null,
+        "batch_output": null,
         "tiers": [
           {
             "above_input_tokens": 32000,
             "input": 0.1,
-            "output": 0.4,
-            "batch_input": 0.05,
-            "batch_output": 0.2
+            "output": 0.4
           },
           {
             "above_input_tokens": 256000,
             "input": 0.2,
-            "output": 0.8,
-            "batch_input": 0.1,
-            "batch_output": 0.4
+            "output": 0.8
           }
         ]
       },
@@ -5042,8 +5071,7 @@
           "fields": [
             "context_window",
             "modalities",
-            "max_output_tokens",
-            "release_date"
+            "max_output_tokens"
           ]
         }
       ],

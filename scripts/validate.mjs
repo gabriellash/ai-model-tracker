@@ -103,6 +103,7 @@ export function validateDataset({ models, changelog = [], status = null }, { tod
     const covered = new Set((Array.isArray(m.sources) ? m.sources : []).flatMap((s) => (Array.isArray(s?.fields) ? s.fields : [])));
     for (const f of SOURCED_FIELDS) {
       if (m[f] === null || m[f] === undefined) continue;
+      if (f === 'modalities' && m[f].input === null && m[f].output === null) continue;
       if (!covered.has(f)) errors.push(`${at}: no source covers "${f}"`);
     }
   });

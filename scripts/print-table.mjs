@@ -9,8 +9,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { models } = JSON.parse(readFileSync(path.join(ROOT, 'data/models.json'), 'utf8'));
 const only = process.argv[2]?.toLowerCase();
 
-const money = (v) => (v === null || v === undefined ? '—' : `$${v < 0.1 ? +v.toFixed(4) : +v.toFixed(3)}`);
-const tokens = (v) => (v === null || v === undefined ? '—' : v >= 1e6 ? `${+(v / 1e6).toFixed(2)}M` : `${Math.round(v / 1000)}K`);
+const money = (v) => (v === null || v === undefined ? 'n/a' : `$${v}`);
+const tokens = (v) => (v === null || v === undefined ? 'n/a' : v.toLocaleString('en-US'));
 const MOD = { text: 'T', image: 'I', audio: 'A', video: 'V', pdf: 'P' };
 
 const cols = [
@@ -19,17 +19,17 @@ const cols = [
   ['In', (m) => money(m.pricing?.input)],
   ['Out', (m) => money(m.pricing?.output)],
   ['Cached', (m) => money(m.pricing?.cached_input)],
-  ['Batch in/out', (m) => (m.pricing?.batch_input != null ? `${money(m.pricing.batch_input)}/${money(m.pricing.batch_output)}` : '—')],
+  ['Batch in/out', (m) => (m.pricing?.batch_input != null ? `${money(m.pricing.batch_input)}/${money(m.pricing.batch_output)}` : 'n/a')],
   ['Ctx', (m) => tokens(m.context_window)],
   ['MaxOut', (m) => tokens(m.max_output_tokens)],
-  ['In-mod', (m) => m.modalities.input.map((x) => MOD[x]).join('')],
-  ['Open', (m) => (m.open_weights.available === null ? '?' : m.open_weights.available ? 'yes' : '')],
+  ['In-mod', (m) => (m.modalities.input ? m.modalities.input.map((x) => MOD[x]).join('') : 'n/a')],
+  ['Open', (m) => (m.open_weights.available === null ? 'n/a' : m.open_weights.available ? 'yes' : '')],
   ['Notes', (m) => [
-    m.pricing === null && 'price not verified',
+    m.pricing === null && 'price: not available',
     m.pricing?.tiers?.length && `tier >${tokens(m.pricing.tiers[0].above_input_tokens)}`,
     m.pricing?.scheduled?.length && `→${money(m.pricing.scheduled[0].input)}/${money(m.pricing.scheduled[0].output)} on ${m.pricing.scheduled[0].effective_date}`,
   ].filter(Boolean).join('; ')],
-  ['Released', (m) => m.release_date ?? '—'],
+  ['Released', (m) => m.release_date ?? 'n/a'],
 ];
 
 const rows = models.filter((m) => !only || m.provider.toLowerCase() === only);
@@ -47,4 +47,4 @@ rows.forEach((m, i) => {
   }
   console.log(line(cells[i]));
 });
-console.log(`\n${rows.length} models. Prices: USD per 1M tokens. In-mod: T text, I image, A audio, V video, P pdf. Open: open weights (? = not stated).`);
+console.log(`\n${rows.length} models. Prices: USD per 1M tokens. In-mod: T text, I image, A audio, V video, P pdf. Open: open weights (n/a = not stated by the provider).`);

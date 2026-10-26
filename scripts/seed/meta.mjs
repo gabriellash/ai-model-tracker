@@ -8,7 +8,7 @@ const MUSE_BLOG = 'https://ai.meta.com/blog/introducing-muse-spark-meta-model-ap
 export default [
   model({ provider: 'Meta', slug: 'muse-spark-1.1', name: 'Muse Spark 1.1', api_id: 'muse-spark-1.1', status: 'preview', release_date: '2026-07-09',
     announcement_url: MUSE_BLOG, pricing: { input: 1.25, output: 4.25 }, context_window: 1_000_000,
-    input: ['text', 'image', 'audio', 'video', 'pdf'], pricing_url: MUSE_API, spec_url: MUSE_BLOG }),
+    input: ['image', 'audio', 'video', 'pdf'], output: null, pricing_url: MUSE_API, spec_url: MUSE_BLOG }),
   // Open weights; Meta lists no first-party per-token price for these.
   model({ provider: 'Meta', slug: 'llama-4-maverick', name: 'Llama 4 Maverick', api_id: null, announcement_url: LLAMA4_BLOG,
     context_window: 1_000_000, input: ['text', 'image'], open_weights: { available: true, license: null }, availability: ['self-hosted'],

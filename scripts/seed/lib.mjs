@@ -10,9 +10,12 @@ export function model({
 }) {
   const sources = [];
   if (pricing) sources.push({ url: pricing_url, fields: ['pricing'] });
-  const specFields = ['context_window', 'modalities'];
-  if (max_output_tokens !== null) specFields.push('max_output_tokens');
-  if (release_date) specFields.push('release_date');
+  // A field is attributed to the spec page only when no more specific source is given for it.
+  const elsewhere = new Set(extra_sources.flatMap((s) => s.fields));
+  const specFields = ['context_window'];
+  if ((input !== null || output !== null) && !elsewhere.has('modalities')) specFields.push('modalities');
+  if (max_output_tokens !== null && !elsewhere.has('max_output_tokens')) specFields.push('max_output_tokens');
+  if (release_date && !elsewhere.has('release_date')) specFields.push('release_date');
   if (open_weights && open_weights.available !== null) specFields.push('open_weights');
   if (pricing_url === spec_url && pricing) sources[0].fields.push(...specFields);
   else sources.push({ url: spec_url, fields: specFields });
