@@ -246,8 +246,10 @@
           "$ref": "#/$defs/nullableDate"
         },
         "status": {
+          "description": "ga only when the provider states general availability; available = listed and callable, status not stated.",
           "enum": [
             "preview",
+            "available",
             "ga",
             "deprecated",
             "retired"

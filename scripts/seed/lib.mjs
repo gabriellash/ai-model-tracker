@@ -2,7 +2,7 @@
 export const VERIFIED = '2026-10-26';
 
 export function model({
-  provider, slug, name, api_id = slug, release_date = null, status = 'ga',
+  provider, slug, name, api_id = slug, release_date = null, status = 'available',
   deprecation_date = null, retirement_date = null, announcement_url = null,
   pricing = null, context_window, max_output_tokens = null,
   input = ['text'], output = ['text'], open_weights = null, availability = ['first-party'],

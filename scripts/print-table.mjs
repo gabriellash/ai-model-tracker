@@ -15,7 +15,7 @@ const MOD = { text: 'T', image: 'I', audio: 'A', video: 'V', pdf: 'P' };
 
 const cols = [
   ['Model', (m) => m.name],
-  ['Status', (m) => m.status + (m.retirement_date ? ` →${m.retirement_date.slice(2)}` : '')],
+  ['Status', (m) => (m.status === 'available' ? 'available (status not stated)' : m.status) + (m.retirement_date ? ` →${m.retirement_date.slice(2)}` : '')],
   ['In', (m) => money(m.pricing?.input)],
   ['Out', (m) => money(m.pricing?.output)],
   ['Cached', (m) => money(m.pricing?.cached_input)],
