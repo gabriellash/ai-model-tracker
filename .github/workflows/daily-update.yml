@@ -1,0 +1,249 @@
+# Daily research run at 06:00 Europe/Berlin.
+#
+# research: Claude checks official pages and edits the two data files. This job's token is read-only and the agent
+#           has no git, gh or general shell access, so text on a web page cannot make it push anything.
+# publish:  takes only data/models.json and data/changelog.json from the research job, validates and guards them
+#           again, then commits to main (clean) or opens a needs-review PR (flagged). On failure nothing is written.
+# deploy:   rebuilds the site after a commit to main.
+name: daily-update
+
+on:
+  schedule:
+    # Two UTC times so one of them is 06:00 in Berlin in both winter (UTC+1) and summer (UTC+2).
+    - cron: '0 4 * * *'
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+      date: ${{ steps.check.outputs.date }}
+    steps:
+      - id: check
+        run: |
+          hour=$(TZ=Europe/Berlin date +%H)
+          echo "date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$hour" = "06" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping: it is ${hour}:xx in Berlin, the run happens at 06:xx." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  research:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    outputs:
+      result: ${{ steps.guard.outputs.result }}
+      changes: ${{ steps.guard.outputs.changes }}
+      base_sha: ${{ steps.base.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+      - id: base
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      - id: prompt
+        run: |
+          {
+            echo 'text<<PROMPT_EOF'
+            cat prompts/daily-update.md
+            echo
+            echo '## Run details'
+            echo
+            echo "- Today (UTC): ${{ needs.gate.outputs.date }}"
+            echo "- Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo 'PROMPT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ github.token }}
+          prompt: ${{ steps.prompt.outputs.text }}
+          claude_args: |
+            --model ${{ vars.CLAUDE_MODEL || 'claude-sonnet-5-5' }}
+            --max-turns ${{ vars.CLAUDE_MAX_TURNS || '200' }}
+            --allowedTools "WebSearch,WebFetch,Read,Edit,Write,Glob,Grep,Bash(node scripts/validate.mjs)"
+
+      - name: Usage and cost of this run
+        if: always() && steps.claude.outputs.execution_file != ''
+        env:
+          EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const log = JSON.parse(fs.readFileSync(process.env.EXECUTION_FILE, "utf8"));
+            const r = [].concat(log).reverse().find((m) => m.type === "result") || {};
+            const u = r.usage || {};
+            const out = { total_cost_usd: r.total_cost_usd ?? null, num_turns: r.num_turns ?? null, duration_ms: r.duration_ms ?? null,
+              input_tokens: u.input_tokens ?? null, output_tokens: u.output_tokens ?? null,
+              cache_read_input_tokens: u.cache_read_input_tokens ?? null, cache_creation_input_tokens: u.cache_creation_input_tokens ?? null,
+              web_search_requests: u.server_tool_use?.web_search_requests ?? null };
+            fs.writeFileSync("run-usage.json", JSON.stringify(out, null, 2));
+            const rows = Object.entries(out).map(([k, v]) => `| ${k} | ${v === null ? "not reported" : v} |`).join("\n");
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### Usage (as reported by Claude Code)\n\n| Metric | Value |\n|---|---|\n${rows}\n\n`);
+          '
+
+      - name: Validate
+        run: node scripts/validate.mjs
+
+      - id: guard
+        name: Guard against suspicious changes
+        run: node scripts/guard.mjs --base HEAD
+
+      - name: Job summary
+        if: always()
+        run: |
+          [ -f guard-report.md ] && cat guard-report.md >> "$GITHUB_STEP_SUMMARY"
+          echo "### Agent run summary" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f run-summary.md ]; then cat run-summary.md >> "$GITHUB_STEP_SUMMARY"; else echo "The agent did not write run-summary.md." >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: research
+          path: |
+            data/models.json
+            data/changelog.json
+            run-summary.md
+            guard-report.md
+            run-usage.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish:
+    needs: [gate, research]
+    if: needs.research.outputs.result == 'clean' || needs.research.outputs.result == 'flagged'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      committed: ${{ steps.commit.outputs.committed }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.research.outputs.base_sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v8
+        with:
+          name: research
+          path: ${{ runner.temp }}/research
+
+      # Only the two data files are taken from the research job; nothing else it produced is trusted.
+      - name: Apply data files
+        run: |
+          cp "$RUNNER_TEMP/research/data/models.json" data/models.json
+          cp "$RUNNER_TEMP/research/data/changelog.json" data/changelog.json
+
+      - name: Validate again
+        run: node scripts/validate.mjs
+
+      - id: guard
+        name: Guard again
+        run: node scripts/guard.mjs --base HEAD
+
+      - name: Record check time
+        env:
+          CHANGES: ${{ steps.guard.outputs.changes }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const s = JSON.parse(fs.readFileSync("data/status.json", "utf8"));
+            const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+            s.last_checked = now;
+            if (Number(process.env.CHANGES) > 0) s.last_changed = now;
+            s.last_run_url = process.env.RUN_URL;
+            fs.writeFileSync("data/status.json", JSON.stringify(s, null, 2) + "\n");
+          '
+          node scripts/validate.mjs
+
+      - id: commit
+        name: Commit to main or open a review PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ steps.guard.outputs.result }}
+          CHANGES: ${{ steps.guard.outputs.changes }}
+          DATE: ${{ needs.gate.outputs.date }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          case "$CHANGES" in 0) label="no changes" ;; 1) label="1 change" ;; *) label="$CHANGES changes" ;; esac
+          msg="data: daily update $DATE ($label)"
+          {
+            echo "$msg"
+            echo
+            echo "Run: $RUN_URL"
+            echo
+            cat "$RUNNER_TEMP/research/run-summary.md" 2>/dev/null || echo "No run summary."
+          } > "$RUNNER_TEMP/commit-msg.txt"
+          git add data/models.json data/changelog.json data/status.json
+
+          if [ "$RESULT" = "clean" ]; then
+            git commit -q -F "$RUNNER_TEMP/commit-msg.txt"
+            # Fails (and writes nothing) if main moved since the research job started.
+            git push origin HEAD:main
+            echo "committed=true" >> "$GITHUB_OUTPUT"
+            echo "Committed to main: $msg" >> "$GITHUB_STEP_SUMMARY"
+          else
+            branch="data/review-$DATE"
+            git switch -c "$branch"
+            git commit -q -F "$RUNNER_TEMP/commit-msg.txt"
+            git push --force origin "$branch"
+            gh label create needs-review --color d93f0b --description "Daily update flagged by the guard" 2>/dev/null || true
+            {
+              echo "The daily update was flagged by the suspicious-change guard, so it was not committed to main."
+              echo "Check each value against its source link, then merge (deploys automatically) or close."
+              echo
+              cat guard-report.md
+              echo
+              echo "## Agent run summary"
+              cat "$RUNNER_TEMP/research/run-summary.md" 2>/dev/null || echo "No run summary."
+              echo
+              echo "Run: $RUN_URL"
+            } > "$RUNNER_TEMP/pr-body.md"
+            if gh pr view "$branch" --json state -q .state 2>/dev/null | grep -q OPEN; then
+              gh pr edit "$branch" --body-file "$RUNNER_TEMP/pr-body.md"
+            else
+              gh pr create --base main --head "$branch" --title "$msg (needs review)" --label needs-review --body-file "$RUNNER_TEMP/pr-body.md"
+            fi
+            echo "committed=false" >> "$GITHUB_OUTPUT"
+            echo "Flagged: opened PR from $branch" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  deploy:
+    needs: publish
+    if: needs.publish.outputs.committed == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml
